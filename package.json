@@ -1,0 +1,29 @@
+{
+  "name": "linkbin-webapp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch './src' --ext ts --ignore 'dist/*' --exec ts-node --loader ts-node/esm src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dev-ankit23/Linkbin-webapp.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dev-ankit23/Linkbin-webapp/issues"
+  },
+  "homepage": "https://github.com/dev-ankit23/Linkbin-webapp#readme",
+  "description": "",
+  "dependencies": {
+    "@types/express": "^5.0.3",
+    "express": "^5.1.0",
+    "mongoose": "^8.17.0",
+    "nodemon": "^3.1.10",
+    "typescript": "^5.9.2"
+  }
+}
