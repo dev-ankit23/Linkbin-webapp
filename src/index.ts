@@ -38,22 +38,26 @@ app.post("/api/v1/signup", async (req, res) => {
   }
 });
 
-app.post("/api/v1/signin", (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+app.post("/api/v1/signin", async (req, res) => {
+  const { username, password } = req.body;
 
-  const existingUser = UserModel.find({ username, password });
+  try {
+    const existingUser = await UserModel.findOne({ username, password });
 
-  if (!existingUser) {
-    res.status(401).json({
-      message: "User dont not exist create new account",
+    if (!existingUser) {
+      return res.status(401).json({
+        message: "User does not exist or wrong credentials",
+      });
+    }
+
+    const token = jwt.sign({ username }, jwtSecret);
+    return res.status(200).json({
+      token,
+      message: "Signin successful",
     });
-  } else {
-    const token = jwt.sign(username, jwtSecret);
-    res.status(200).json({
-      token: token,
-      message: "signin successfully",
-    });
+  } catch (error) {
+    console.error("Signin error:", error);
+    return res.status(500).json({ message: "Server error" });
   }
 });
 
