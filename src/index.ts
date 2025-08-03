@@ -1,8 +1,10 @@
 import express from "express";
 import { connectDB, UserModel } from "./db.js";
+import jwt from "jsonwebtoken";
 
 const app = express();
 app.use(express.json());
+const jwtSecret = "fakljh";
 
 connectDB();
 
@@ -36,7 +38,24 @@ app.post("/api/v1/signup", async (req, res) => {
   }
 });
 
-app.post("/api/v1/signin", (req, res) => {});
+app.post("/api/v1/signin", (req, res) => {
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const existingUser = UserModel.find({ username, password });
+
+  if (!existingUser) {
+    res.status(401).json({
+      message: "User dont not exist create new account",
+    });
+  } else {
+    const token = jwt.sign(username, jwtSecret);
+    res.status(200).json({
+      token: token,
+      message: "signin successfully",
+    });
+  }
+});
 
 app.post("/api/v1/content", (req, res) => {});
 
