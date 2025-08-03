@@ -20,8 +20,10 @@
   "homepage": "https://github.com/dev-ankit23/Linkbin-webapp#readme",
   "description": "",
   "dependencies": {
+    "@types/bcrypt": "^6.0.0",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
+    "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
