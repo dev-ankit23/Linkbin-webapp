@@ -4,10 +4,10 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { ContentModel } from "./db.js";
 import { UserMiddleware } from "./middleware.js";
+import { jwtSecret } from "./config.js";
 
 const app = express();
 app.use(express.json());
-const jwtSecret = "fakljh";
 
 connectDB();
 
@@ -68,7 +68,13 @@ app.post("/api/v1/signin", async (req, res) => {
     }
 
     // 3. If password is correct, generate token
-    const token = jwt.sign({ id: existingUser._id }, jwtSecret);
+    const token = jwt.sign(
+      {
+        sub: existingUser._id.toString(), // 'sub' is standard for user ID
+        id: existingUser._id.toString(),
+      },
+      jwtSecret
+    );
 
     return res.status(200).json({
       token,
@@ -87,7 +93,6 @@ app.post("/api/v1/content", UserMiddleware, async (req, res) => {
     link,
     type,
     title,
-    //@ts-ignore
     userId: req.userId,
   });
 

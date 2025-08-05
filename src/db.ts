@@ -24,19 +24,30 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
-// interface Content {
+interface Content {
+  title: string;
+  type: "document" | "tweet" | "youtube" | "link";
+  link: string;
+  tags: mongoose.Types.ObjectId[];
+  userId: mongoose.Types.ObjectId;
+}
 
-//   type: "document" | "tweet" | "youtube" | "link";
-//   link: string;
-//   title: string;
-//   tags: string[];
-// }
-
-const ContentSchema = new Schema({
-  title: "String",
-  link: "String",
-  tags: [{ type: mongoose.Types.ObjectId, ref: "Tag" }],
-  userId: { type: mongoose.Types.ObjectId, ref: "User" },
+const ContentSchema = new Schema<Content>({
+  title: {
+    type: String,
+    required: true,
+  },
+  type: {
+    type: String,
+    enum: ["document", "tweet", "youtube", "link"],
+    required: true,
+  },
+  link: {
+    type: String,
+    required: true,
+  },
+  tags: [{ type: Schema.Types.ObjectId, ref: "Tag" }],
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 
 export const UserModel = mongoose.model("User", UserSchema);
