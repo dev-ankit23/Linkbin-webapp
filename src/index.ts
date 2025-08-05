@@ -2,6 +2,8 @@ import express from "express";
 import { connectDB, UserModel } from "./db.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ContentModel } from "./db.js";
+import { UserMiddleware } from "./middleware.js";
 
 const app = express();
 app.use(express.json());
@@ -66,7 +68,7 @@ app.post("/api/v1/signin", async (req, res) => {
     }
 
     // 3. If password is correct, generate token
-    const token = jwt.sign({ username }, jwtSecret);
+    const token = jwt.sign({ id: existingUser._id }, jwtSecret);
 
     return res.status(200).json({
       token,
@@ -78,7 +80,21 @@ app.post("/api/v1/signin", async (req, res) => {
   }
 });
 
-app.post("/api/v1/content", (req, res) => {});
+app.post("/api/v1/content", UserMiddleware, async (req, res) => {
+  const { title, link, type } = req.body;
+
+  await ContentModel.create({
+    link,
+    type,
+    title,
+    //@ts-ignore
+    userId: req.userId,
+  });
+
+  res.json({
+    message: "Content Saved",
+  });
+});
 
 app.get("/api/v1/content", (req, res) => {});
 

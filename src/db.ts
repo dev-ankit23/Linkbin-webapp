@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
 export async function connectDB() {
   try {
@@ -24,4 +24,20 @@ const UserSchema = new mongoose.Schema({
   },
 });
 
+// interface Content {
+
+//   type: "document" | "tweet" | "youtube" | "link";
+//   link: string;
+//   title: string;
+//   tags: string[];
+// }
+
+const ContentSchema = new Schema({
+  title: "String",
+  link: "String",
+  tags: [{ type: mongoose.Types.ObjectId, ref: "Tag" }],
+  userId: { type: mongoose.Types.ObjectId, ref: "User" },
+});
+
 export const UserModel = mongoose.model("User", UserSchema);
+export const ContentModel = mongoose.model("Content", ContentSchema);
