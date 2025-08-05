@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 import { ContentModel } from "./db.js";
 import { UserMiddleware } from "./middleware.js";
 import { jwtSecret } from "./config.js";
+// import { ContentModel } from './db';
 
 const app = express();
 app.use(express.json());
@@ -101,9 +102,27 @@ app.post("/api/v1/content", UserMiddleware, async (req, res) => {
   });
 });
 
-app.get("/api/v1/content", (req, res) => {});
+app.get("/api/v1/content", UserMiddleware, async (req, res) => {
+  const userId = req.userId;
 
-app.delete("/api/v1/content", (req, res) => {});
+  const content = await ContentModel.find({ userId: userId });
+  res.status(200).json({
+    content,
+  });
+});
+
+app.delete("/api/v1/content", UserMiddleware, async (req, res) => {
+  const contentid = req.body.contentId;
+
+  await ContentModel.deleteMany({
+    contentid,
+    userId: req.userId,
+  });
+
+  res.json({
+    message: "Content Deleted",
+  });
+});
 
 app.post("/api/v1/brain/share", (req, res) => {});
 
